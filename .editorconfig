@@ -1,0 +1,10 @@
+# 告诉EditorConfig插件，这是根文件，不用继续往上查找
+root = true
+
+[*] # 针对所有文件
+charset = utf-8  # 就是规定了采用哪种字符编码
+indent_style = space
+indent_size = 2
+end_of_line = lf # 控制换行类型(lf | cr | crlf)
+trim_trailing_whitespace = true # 去除行首的任意空白字符
+insert_final_newline = true # 始终在文件末尾插入一个新行

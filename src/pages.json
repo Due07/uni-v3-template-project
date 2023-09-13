@@ -1,0 +1,30 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    { "path": "pages/tabBar/test1" },
+    { "path": "pages/tabBar/test2" },
+    { "path": "pages/tabBar/test3" },
+    {
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		}
+	],
+  "tabBar": {
+    "custom": true, /* 是否自定义tabbar */
+    "color": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "selectedColor": "#F8F8F8",
+    "list": [
+      { "pagePath": "pages/tabBar/test1", "text": "test1" },
+      { "pagePath": "pages/tabBar/test2", "text": "test2" },
+      { "pagePath": "pages/tabBar/test3", "text": "test3" }
+    ]
+  },
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}
