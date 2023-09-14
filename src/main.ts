@@ -1,4 +1,5 @@
 import { createSSRApp } from 'vue';
+import uViewPlus from 'uview-plus';
 import store from './store';
 import jsConfig from '@/common/config';
 import App from './App.vue';
@@ -32,7 +33,10 @@ Object.assign(uni, jsConfig);
 
 export function createApp() {
   const app = createSSRApp(App);
-  app.use(store);
+  app.use(store).use(uViewPlus);
+  uni.$u.setConfig({
+    config: { unit: 'rpx' },
+  });
 
   return { app };
 }

@@ -25,4 +25,6 @@ onHide(() => {
   console.log('App Hide');
 });
 </script>
-<style></style>
+<style lang="scss">
+@import 'uview-plus/index.scss';
+</style>

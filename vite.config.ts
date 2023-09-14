@@ -12,4 +12,12 @@ export default defineConfig({
       cache: false,
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 引入全局样式
+        // additionalData: '@import "@/style/index.scss";',
+      },
+    },
+  }
 });
