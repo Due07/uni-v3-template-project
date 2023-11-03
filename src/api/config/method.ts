@@ -1,8 +1,8 @@
 import type { FlyError, FlyRequestConfig, FlyResponse } from 'flyio';
 import FlyRequest, { type IConfig } from './request';
 import jsConfig from '@/common/config';
-// import store from '@/store';
 import { useUserStore } from '@/store/state/user';
+import { postRefreshTokenUrl } from '@/config';
 
 export interface IOptions {
   loading?: boolean,
@@ -17,15 +17,28 @@ export default class extends FlyRequest {
 
   private userStore = useUserStore();
 
+  /** 十分钟时间戳 */
+  #tenMinutes = 10 * 60 * 1000;
+
+  /** 401 失败重新使用次数 超过一次 删除 */
+  #errorMap = new Map([]);
+
   constructor(config: IConfig, options?:IOptions) {
     super(config, options);
 
-    this.http.interceptors.request.use((requestConfig: FlyRequestConfig & IOptions) => {
+    this.http.interceptors.request.use(async (requestConfig: FlyRequestConfig & IOptions) => {
       if (jsConfig.$isEnv('production')) console.log('request', requestConfig);
 
       // token
       const token = this.userStore.getToken;
       if (token) {
+        const expirationTime = this.userStore.expirationTime as string;
+        if (+(new Date()) - +expirationTime < this.#tenMinutes) {
+          // 锁定
+          this.http.lock();
+          await this.refreshToken().finally(() => this.http.unlock());
+        }
+
         requestConfig.headers['Authorization'] = `Bearer ${token}`;
       }
 
@@ -39,7 +52,7 @@ export default class extends FlyRequest {
     });
 
     this.http.interceptors.response.use(
-      <T>(responseConfig: FlyResponse<IApiResponseData<T>> & { request: IOptions }) => {
+      async <T>(responseConfig: FlyResponse<IApiResponseData<T>> & { request: IOptions }) => {
         if (jsConfig.$isEnv('production')) console.log('response', responseConfig);
 
         const { data, request } = responseConfig;
@@ -49,17 +62,26 @@ export default class extends FlyRequest {
         switch (data.code) {
         case 200:
           return Promise.resolve(data);
-        case 401:
+        case 401: {
+          const reuqestUrl = (request.baseURL ?? '') + request.url;
+          if (
+            !this.#errorMap.get(request.baseURL)
+            && this.userStore.token
+            && reuqestUrl !== postRefreshTokenUrl
+          ) {
+            this.#errorMap.set(request.baseURL, true);
+            this.http.lock();
+            // 重试操作
+            await this.refreshToken().finally(() => this.http.unlock());
+            // 待验证
+            return this.request(request.url as string, request.body, request);
+          } else {
+            this.#errorMap.delete(request.baseURL);
+          }
+
           // 清除用户状态
-          this.userStore.setToken('');
+          this.userStore.setToken({});
           this.userStore.setUserInfo({});
-          // 上报日志
-          this.logManager
-          && this.logManager.warn(
-            'requestApi: success(code: 401) ',
-            `时间: ${new Date().toLocaleString()}`,
-            responseConfig,
-          );
 
           if (!request.hideErrorToast) {
             uni.showToast({
@@ -69,6 +91,7 @@ export default class extends FlyRequest {
             });
           }
           break;
+        }
         default:
           // 上报日志
           this.logManager
@@ -111,5 +134,30 @@ export default class extends FlyRequest {
         }
       },
     );
+  }
+
+  /** 刷新静默token */
+  async refreshToken () {
+    const loading = uni.$loading('加载中...', true);
+    await this.newHttp.post<IApiResponseData<string>>(
+      postRefreshTokenUrl,
+      { token: this.userStore.refreshToken }
+    ).then((res) => {
+      console.log('token 重新获取', res);
+      if (res.data.code === 200) {
+        this.userStore.setToken(JSON.parse(res.data.data));
+      } else {
+        Promise.reject(res.data);
+      }
+    }).catch((error) => {
+      // 上报日志
+      this.logManager && this.logManager.error(
+        'requestApi: 刷新token error ',
+        `时间: ${new Date().toLocaleString()}`,
+        error
+      );
+      console.warn('刷新token 出错!', error);
+      Promise.reject(error);
+    }).finally(() => loading());
   }
 }

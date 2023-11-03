@@ -1,12 +1,16 @@
 /** 用户信息 */
 import { defineStore } from 'pinia';
-import type { IUserState } from '../types/user';
+import type { ILoginToken, IUserState } from '../types/user';
 
 export const useUserStore = defineStore({
   id: 'user',
   state: (): IUserState => ({
     loginCode: undefined,
     token: undefined,
+    /** token 到期时间 */
+    expirationTime: undefined,
+    /** 刷新token */
+    refreshToken: undefined,
     userInfo: undefined,
     phone: undefined,
   }),
@@ -25,9 +29,11 @@ export const useUserStore = defineStore({
       // this.token = user.token;
       // this.phone = user.phone;
     },
-    setToken (value: string) {
-      this.token = value;
-    }
+    setToken (form: Partial<ILoginToken>) {
+      this.token = form.accessToken;
+      this.refreshToken = form.refreshToken;
+      this.expirationTime = form.expirationTime;
+    },
   },
   persist: { key: 'dzz-user-info' }
 });
