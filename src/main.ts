@@ -3,6 +3,7 @@ import uViewPlus from 'uview-plus';
 import store from './store';
 import jsConfig from '@/common/config';
 import App from './App.vue';
+import '@/assets/styles/index.scss';
 
 const updateManager = uni.getUpdateManager();
 

@@ -7,7 +7,7 @@ import { useSystemStore } from '@/store/state/system';
 import { useUserStore } from '@/store/state/user';
 
 /** 打印日志, production 不打印 */
-const $log = (...args: any[]) => {
+const $log = (...args: unknown[]) => {
   if (import.meta.env.MODE === 'development') {
     console.log('%c LOG ', 'background: #aaa; color: #bada55', ...args);
   }
@@ -54,7 +54,7 @@ type TOptionsIcon = 'success' | 'loading' | 'none' | 'error' | 'fail' | 'excepti
  * @param {String} success - 状态 **{ 'success'|'loading'|'none' }**
  *
  */
-export const $alert = (text: string, duration = 3000, success: TOptionsIcon = 'none', opt = {}) => {
+export const $alert = (text: string, duration: number = 3000, success: TOptionsIcon = 'none', opt = {}) => {
   if (judgmentType(text, 'String')) {
     const test = '[\u4e00-\u9fa5]{8}';
     const math = (RegExp(test, 'gm').exec(text) ?? [])[0];
@@ -76,7 +76,7 @@ export const $alert = (text: string, duration = 3000, success: TOptionsIcon = 'n
  * @param { Boolean } mask - 是否禁止穿透
  * @returns { Function } - 返回关闭事件
  */
-export const $loading = (text = '加载中', mask = true): Function => {
+export const $loading = (text: string = '加载中', mask: boolean = true): Function => {
   uni.showLoading({
     title: text,
     mask,
@@ -89,7 +89,7 @@ export const $loading = (text = '加载中', mask = true): Function => {
  * @param { Function } fun - 获取成功后执行的函数
  * @returns { Promise }
  */
-export const $login = async (fun?: Function) => {
+export const $login = async (fun?: Function): Promise<void> => {
   return new Promise<void>((resolve) => {
     uni.login({
       success(e) {
@@ -137,8 +137,8 @@ export const $checkSession = function (): Promise<void> {
 };
 
 /* 获取设备信息 ios / android / pc **/
-export const $systemInfo = async function () {
-  const systemInfo = await uni.getSystemInfoSync();
+export const $systemInfo = function () {
+  const systemInfo = uni.getSystemInfoSync();
 
   const systemStore = useSystemStore();
   systemStore.setSystemInfo(systemInfo.osName ?? '');

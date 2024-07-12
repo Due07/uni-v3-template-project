@@ -52,6 +52,7 @@
     "@dcloudio/uni-mp-toutiao": "3.0.0-3081220230817001",
     "@dcloudio/uni-mp-weixin": "3.0.0-3081220230817001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-3081220230817001",
+    "@types/node": "^20.14.9",
     "flyio": "^0.6.14",
     "pinia": "2.0.36",
     "pinia-plugin-persistedstate": "^3.2.0",

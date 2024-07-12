@@ -5,12 +5,8 @@ const store = createPinia();
 
 store.use(createPersistedState({
   storage: {
-    getItem (key: string) {
-      return uni.getStorageSync(key);
-    },
-    setItem<T>(key: string, value: T) {
-      uni.setStorageSync(key, value);
-    },
+    getItem (key: string) { return uni.getStorageSync(key); },
+    setItem<T>(key: string, value: T) { uni.setStorageSync(key, value); },
   }
 }));
 

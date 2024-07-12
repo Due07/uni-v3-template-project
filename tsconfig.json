@@ -7,6 +7,7 @@
       "@/*": ["./src/*"]
     },
     "ignoreDeprecations": "5.0",
+    "suppressImplicitAnyIndexErrors": true, // 修复obj上key 不存在string
     "lib": ["esnext", "dom"],
     "types": ["@dcloudio/types", "miniprogram-api-typings/types"]
   },

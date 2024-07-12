@@ -1,0 +1,59 @@
+
+$map: (
+  position: (relative, absolute, fixed, inherit),
+  display: (flex, inline-flex, block, inline-block),
+);
+
+@each $keys, $values in $map {
+  @each $item in $values {
+    .#{$item} {
+      #{$keys}: $item;
+    }
+  }
+}
+
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+.justify-around {
+  justify-content: space-around;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+.justify-end {
+  justify-content: end;
+}
+
+// .index-0 { z-index: 0 }
+// .index-1 { z-index: 1 }
+// .index-99 { z-index: 99 }
+
+@each $key in 99 {
+  .index-#{$key} {
+    z-index: $key;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+.overflow-hidden {
+  overflow: hidden;
+}

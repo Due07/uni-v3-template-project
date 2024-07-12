@@ -21,7 +21,7 @@ export const judgmentType = <T>(data: T, type: TBasicType) => {
  */
 export function debounce(fun: Function, delay = 300) {
   let timeout: number;
-  return function <T>(this: T, ...arg: any[]) {
+  return function <T>(this: T, ...arg: unknown[]) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       Reflect.apply(fun, this, arg);

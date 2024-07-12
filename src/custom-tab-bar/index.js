@@ -1,4 +1,5 @@
 /* eslint-disable */
+const { tabBarList } = require('./config');
 const app = getApp();
 Component({
   // options: {
@@ -8,32 +9,7 @@ Component({
     selected: app.globalData?.selectedBar ?? 0,
     color: '#7A7E83',
     selectedColor: '#3cc51f',
-    list: [
-      {
-        'name': 'test1',
-        'pagePath': '/pages/tabBar/test1',
-        userauth: false,
-        // 'iconPath': '../static/image/tabBar/welfare.png',
-        // 'selectedIconPath': '../static/image/tabBar/welfare-select.png'
-        'text': 'test1'
-      },
-      {
-        'name': 'test2',
-        'pagePath': '/pages/tabBar/test2',
-        userauth: false,
-        // 'iconPath': '../static/image/tabBar/welfare.png',
-        // 'selectedIconPath': '../static/image/tabBar/welfare-select.png'
-        'text': 'test2'
-      },
-      {
-        'name': 'test3',
-        'pagePath': '/pages/tabBar/test3',
-        userauth: false,
-        // 'iconPath': '../static/image/tabBar/welfare.png',
-        // 'selectedIconPath': '../static/image/tabBar/welfare-select.png'
-        'text': 'test3'
-      },
-    ]
+    list: [...tabBarList]
   },
   ready() {
     const [currentPages] = getCurrentPages();
@@ -51,7 +27,7 @@ Component({
       // const [currentPages] = getCurrentPages();
 
       // 是否需要用户鉴权
-      // if (data.userauth || !url) {
+      // if (data.userAuth || !url) {
       //   if (!wx.getStorageSync('user').phone) {
       //     currentPages.$vm.dialogShow = true;
       //     return;

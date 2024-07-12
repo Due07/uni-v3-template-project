@@ -35,5 +35,5 @@ export const useUserStore = defineStore({
       this.expirationTime = form.expirationTime;
     },
   },
-  persist: { key: 'dzz-user-info' }
+  persist: { key: 'wx-user-info' }
 });
